@@ -1,8 +1,8 @@
-## Interface: 120007
+## Interface: 120100
 ## Title: Elitist's Toolkit
 ## Notes: Gear score, M+ rating, and gem/enchant status as a styled overlay on the character and inspect frames. Bag-vs-equipped comparison is native Blizzard behavior (alwaysCompareItems), not reimplemented here.
 ## Author: morphe
-## Version: 0.10.5
+## Version: 0.11.0
 ## SavedVariablesPerCharacter: ElitistsToolkitDB
 ## IconTexture: Interface\Icons\INV_Misc_QuestionMark
 

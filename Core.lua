@@ -4,11 +4,12 @@ local ADDON_NAME, ET = ...
 -- pattern and attaches its own functions/tables to it.
 _G.ElitistsToolkit = ET
 
-ET.VERSION = "0.10.5"
+ET.VERSION = "0.11.0"
 
 -- Equipped slots we care about, in paperdoll order. IDs are resolved at
--- runtime via GetInventorySlotInfo rather than hardcoded, since that's the
--- documented, stable way to get slot IDs and avoids guessing at numbers.
+-- runtime via C_PaperDollInfo.GetInventorySlotInfo rather than hardcoded,
+-- since that's the documented, stable way to get slot IDs and avoids
+-- guessing at numbers.
 --
 -- "side" is the direction the ilvl badge sits relative to its icon, not a
 -- literal left/right-column label -- and it points INWARD toward the
@@ -94,9 +95,22 @@ ET.ENCHANTABLE_SLOTS = {
 
 local frame = CreateFrame("Frame")
 
+-- Patch 12.1.0 removed the GetInventorySlotInfo global; it moved to
+-- C_PaperDollInfo with an identical signature (invSlot, texture, checkRelic).
+--
+-- This is not cosmetic. ResolveSlotIDs runs on ADDON_LOADED, so calling the
+-- removed global raised before InitSavedVariables could run -- no slot IDs,
+-- no ET.db, and every overlay downstream dead. The addon did not degrade on
+-- 12.1, it failed at login.
+--
+-- The fallback keeps the addon loading on a pre-12.1 client rather than
+-- trading one hard failure for another.
+local GetInvSlotInfo = (C_PaperDollInfo and C_PaperDollInfo.GetInventorySlotInfo)
+	or _G.GetInventorySlotInfo
+
 local function ResolveSlotIDs()
 	for _, entry in ipairs(ET.SLOTS) do
-		entry.id = GetInventorySlotInfo(entry.key)
+		entry.id = GetInvSlotInfo(entry.key)
 	end
 end
 
@@ -195,7 +209,7 @@ SlashCmdList["ELITISTSTOOLKITDUMP"] = function(slotArg)
 		end)(), ", "))
 		return
 	end
-	local slotID = GetInventorySlotInfo(slotKey)
+	local slotID = GetInvSlotInfo(slotKey)
 	if not slotID then
 		print("ET dump: couldn't resolve slot " .. slotKey)
 		return
