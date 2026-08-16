@@ -1,6 +1,6 @@
 # Elitist's Toolkit
 
-A World of Warcraft retail addon (The War Within / 12.x) that overlays gear
+A World of Warcraft retail addon (Midnight / 12.x) that overlays gear
 intelligence directly onto the native character and inspect frames.
 
 ## Features
@@ -48,8 +48,8 @@ intelligence directly onto the native character and inspect frames.
 
 ## Requirements
 
-- WoW Midnight 12.x retail (The War Within)
-- Interface version: 120007
+- WoW Midnight 12.x retail
+- Interface version: 120100 (patch 12.1.0)
 
 ## Author
 
